@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .warning {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to My Web App</h1>
+    <p id="user-info">Checking authentication...</p>
+
+    <script>
+        // Check if the app is being accessed through Telegram
+        if (typeof Telegram === 'undefined' || !Telegram.WebApp.initDataUnsafe.user) {
+            // If not opened via Telegram, show a fallback message
+            document.getElementById('user-info').innerHTML = `
+                <p class="warning">Please open this web app from within Telegram.</p>
+            `;
+        } else {
+            // Initialize Telegram Web App
+            Telegram.WebApp.ready();
+
+            // Get authenticated user data from Telegram
+            const user = Telegram.WebApp.initDataUnsafe.user;
+
+            // Display user information
+            document.getElementById('user-info').innerHTML = `
+                <p>Hello, <strong>${user.first_name} ${user.last_name}</strong>!</p>
+                <p>Your Telegram username is <strong>@${user.username}</strong>.</p>
+            `;
+        }
+    </script>
+</body>
+</html>
