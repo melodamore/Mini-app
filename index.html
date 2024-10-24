@@ -20,25 +20,33 @@
     <p id="user-info">Checking authentication...</p>
 
     <script>
-        // Check if the app is being accessed through Telegram
-        if (typeof Telegram === 'undefined' || !Telegram.WebApp.initDataUnsafe.user) {
-            // If not opened via Telegram, show a fallback message
-            document.getElementById('user-info').innerHTML = `
-                <p class="warning">Please open this web app from within Telegram.</p>
-            `;
-        } else {
-            // Initialize Telegram Web App
-            Telegram.WebApp.ready();
+        // Wait for the Telegram Web App to be fully initialized
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // Check if Telegram Web App is defined and ready
+            if (typeof Telegram === 'undefined' || !Telegram.WebApp.initDataUnsafe) {
+                document.getElementById('user-info').innerHTML = `
+                    <p class="warning">Please open this web app from within Telegram.</p>
+                `;
+            } else {
+                // Initialize Telegram Web App
+                Telegram.WebApp.ready();
 
-            // Get authenticated user data from Telegram
-            const user = Telegram.WebApp.initDataUnsafe.user;
+                // Get authenticated user data from Telegram
+                const user = Telegram.WebApp.initDataUnsafe.user;
 
-            // Display user information
-            document.getElementById('user-info').innerHTML = `
-                <p>Hello, <strong>${user.first_name} ${user.last_name}</strong>!</p>
-                <p>Your Telegram username is <strong>@${user.username}</strong>.</p>
-            `;
-        }
+                // Display user information if available
+                if (user) {
+                    document.getElementById('user-info').innerHTML = `
+                        <p>Hello, <strong>${user.first_name} ${user.last_name}</strong>!</p>
+                        <p>Your Telegram username is <strong>@${user.username}</strong>.</p>
+                    `;
+                } else {
+                    document.getElementById('user-info').innerHTML = `
+                        <p class="warning">Authentication failed. Please try again.</p>
+                    `;
+                }
+            }
+        });
     </script>
 </body>
 </html>
